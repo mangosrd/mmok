@@ -214,6 +214,20 @@
         }
         .view-back p { margin: 0; font-size: 0.92rem; color: var(--ink-dark); line-height: 1.6; }
         
+        /* ✨ 새로 추가된 대공 능력 텍스트 스타일 */
+        .duke-ability-box {
+            margin-top: 12px;
+            padding: 10px;
+            background: rgba(140, 111, 61, 0.08);
+            border-left: 3px solid var(--royal-gold);
+            font-size: 0.9rem;
+            color: var(--ink-dark);
+            line-height: 1.5;
+        }
+        .duke-ability-box strong {
+            color: var(--royal-gold);
+        }
+
         .back-return-btn { 
             display: inline-block; margin-top: 15px; font-size: 0.82rem; font-weight: 700;
             color: var(--royal-gold); background: none; border: none; padding: 5px 0;
@@ -267,6 +281,7 @@
             .view-back p { font-size: 0.85rem; line-height: 1.5; }
             .duke-title { font-size: 1rem; }
             .duke-subtitle { font-size: 0.75rem; }
+            .duke-ability-box { font-size: 0.8rem; padding: 8px; }
 
             /* 👑 황실 위계 모바일 리스트형으로 구조 파괴 후 재구성 */
             .table-responsive { border: none; }
@@ -363,9 +378,9 @@
             <div class="map-card-container" id="card-east" onclick="toggleCard('card-east')">
                 <div class="map-card-inner">
                     <div class="view-front">
-                        <img src="images/east_duke.jpg" alt="세릭 대공" class="daegong-full-img">
+                        <img src="images/rib.jpg" alt="리비안 대공" class="daegong-full-img">
                         <div class="duke-overlay-bar">
-                            <span class="duke-title">👑 세릭 대공 (Guide)</span>
+                            <span class="duke-title">👑 리비안 대공 (G)</span>
                             <span class="duke-subtitle">동부 여명의 숲 주권자</span>
                             <span class="duke-hint">카드를 터치하여 뒷면의 영지 기록 열람</span>
                         </div>
@@ -374,6 +389,10 @@
                         <h3>🌿 동부 여명의 숲 <span class="danger-badge lvl-safe">[ 위험도 : 하 ]</span></h3>
                         <img src="images/east.jpg" alt="동부 삼림 전경" class="map-img">
                         <p>황실의 가장 충성스러운 방패이자 온건파의 수장. 황실 직속 센트럴 허브의 규율을 철저히 준수하며 대륙의 질서를 유지하고자 합니다. 가이드의 인권과 안전을 최우선 명예로 삼아, 대륙 내에서 가이드들이 가장 안심하고 머무를 수 있는 유일한 도피처로 불립니다. 그러나 그 기저에는 숨 막힐 정도로 엄격한 유교적·황실적 규율이 깔려 있습니다.</p>
+                        <!-- 능력 칸 추가 -->
+                        <div class="duke-ability-box">
+                            <strong>주요 능력:</strong> 그림자 속에서 불러낸 나비를 매개로 기억 소거, 봉인, 최면, 암시, 매혹을 행사하는 정신계 능력이며, 나비의 색상에 따라 발현되는 권능이 달라진다.
+                        </div>
                         <button class="back-return-btn" onclick="toggleCard('card-east')">← 초상화 보기</button>
                     </div>
                 </div>
@@ -383,9 +402,9 @@
             <div class="map-card-container" id="card-west" onclick="toggleCard('card-west')">
                 <div class="map-card-inner">
                     <div class="view-front">
-                        <img src="images/shan.jpg" alt="샨 대공" class="daegong-full-img">
+                        <img src="images/serick.jpg" alt="세릭 대공" class="daegong-full-img">
                         <div class="duke-overlay-bar">
-                            <span class="duke-title">👑 샨 대공 (Sentinel)</span>
+                            <span class="duke-title">👑 세릭 대공 (G)</span>
                             <span class="duke-subtitle">서부 황혼의 협곡 영주</span>
                             <span class="duke-hint">카드를 터치하여 뒷면의 영지 기록 열람</span>
                         </div>
@@ -393,7 +412,11 @@
                     <div class="view-back" onclick="event.stopPropagation();">
                         <h3>🏜️ 서부 황혼의 협곡 <span class="danger-badge lvl-mid">[ 위험도 : 중 ]</span></h3>
                         <img src="images/west.jpg" alt="서부 캐년 전경" class="map-img">
-                        <p>겉으로는 황제의 교지를 따르는 척하지만, 뒤로는 서부 고유의 독자적인 규칙을 고수합니다. 신분, 과거, 혈통은 이곳에서 아무런 의미를 갖지 못하며 오직 '실전 전투력'과 '가이딩 효율'만으로 모든 위계가 결정됩니다. 중앙 허브의 감시 체계가 닿지 않는 협곡 깊은 곳에서 밀수된 정화 앰플과 비공식적인 가이딩 계약이 판치는, 위험하면서도 치명적인 해방구입니다.</p>
+                        <p>서부의 밤은 자비가 없습니다. 해가 떨어지면 숨통을 조이는 한기가 흑요석 협곡을 타고 내려오고, 거친 센티널들의 피가 끓어오르지만, 영지 전체에 짙은 색의 광석(흑요석 등)이 깔려 있어, 밤이 되면 지면에 별빛이 반사되어 마치 땅 위에도 은하수가 흐르는 듯한 착각을 불러일으키는 지역입니다.</p>
+                        <!-- 능력 칸 추가 -->
+                        <div class="duke-ability-box">
+                            <strong>주요 능력:</strong> 능력을 개방하면 영역 안에 있는 모든 센티넬들의 시각적인 안정감과 예민한 감각을 낮춘다. 
+                        </div>
                         <button class="back-return-btn" onclick="toggleCard('card-west')">← 초상화 보기</button>
                     </div>
                 </div>
@@ -405,7 +428,7 @@
                     <div class="view-front">
                         <img src="images/south_duke.jpg" alt="카엘 대공" class="daegong-full-img">
                         <div class="duke-overlay-bar">
-                            <span class="duke-title">👑 카엘 대공 (Guide)</span>
+                            <span class="duke-title">👑 카엘 대공 (G)</span>
                             <span class="duke-subtitle">남부 방치된 폐허 감시자</span>
                             <span class="duke-hint">카드를 터치하여 뒷면의 영지 기록 열람</span>
                         </div>
@@ -414,6 +437,10 @@
                         <h3>🏛️ 남부 방치된 폐허 <span class="danger-badge lvl-mid">[ 위험도 : 중 ]</span></h3>
                         <img src="images/south.jpg" alt="남부 유적 전경" class="map-img">
                         <p>한때 가장 찬란했던 고대 도시는 이제 지하 균열에서 기어 나오는 기괴한 변종 마수들과 부패한 마염으로 가득 찬 사지(死地)가 되었습니다. 이곳의 주둔 기사단은 중앙 허브에서 좌천당하거나 버림받은 능력자들로 구성되어 있으며, 매일 밤 생과 사를 넘나드는 참혹한 토벌을 이어갑니다. 구원의 여지조차 보이지 않는 잿빛 폐허 속에서, 생존만을 위해 서로의 본능에 의지하는 처절하고 피비린내 나는 서사가 흐르는 곳입니다.</p>
+                        <!-- 능력 칸 추가 -->
+                        <div class="duke-ability-box">
+                            <strong>주요 능력:</strong> 능력을 개방하면 영역 내 아군의 부정적 영향과 오염을 정화하고, 상처를 치유하며, 재앙으로부터 보호.
+                        </div>
                         <button class="back-return-btn" onclick="toggleCard('card-south')">← 초상화 보기</button>
                     </div>
                 </div>
@@ -425,7 +452,7 @@
                     <div class="view-front">
                         <img src="images/argent.jpg" alt="아르젠 대공" class="daegong-full-img">
                         <div class="duke-overlay-bar">
-                            <span class="duke-title">👑 아르젠 대공 (Sentinel)</span>
+                            <span class="duke-title">👑 아르젠 대공 (S)</span>
                             <span class="duke-subtitle">북부 심연의 동토 지배자</span>
                             <span class="duke-hint">카드를 터치하여 뒷면의 영지 기록 열람</span>
                         </div>
@@ -434,6 +461,10 @@
                         <h3>❄️ 북부 심연의 동토 <span class="danger-badge lvl-hard">[ 위험도 : 최상 ]</span></h3>
                         <img src="images/north.jpg" alt="북부 빙벽 전경" class="map-img">
                         <p>영구 동토의 혹한만큼이나 차갑고 잔혹한 이성을 지닌 냉혈한들의 영역입니다. 아르젠 가문은 가이드를 인격체가 아닌, 센티넬의 폭주를 막기 위한 '가장 완벽하고 정밀한 정화 도구(부속품)'로만 취급합니다. 매치율이 단 1%라도 떨어지거나 가이딩 능력이 감소한 자는 가차 없이 전선에서 배제되는 극단의 효율주의를 자랑하지만, 주말마다 벌어지는 최악의 대토벌전을 압도적인 무력으로 찍어 누르는 대륙 최고의 전장입니다.</p>
+                        <!-- 능력 칸 추가 -->
+                        <div class="duke-ability-box">
+                            <strong>주요 능력:</strong> 혈액이 닿은 공간을 플라즈마 장으로 변환하여, 대상의 육체와 재생 인자를 분자 단위까지 소각하는 광역 섬멸.
+                        </div>
                         <button class="back-return-btn" onclick="toggleCard('card-north')">← 초상화 보기</button>
                     </div>
                 </div>
