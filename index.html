@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏛️ [아크론 대륙] 센티넬 x 가이드버스</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght=500;700&family=Noto+Serif+KR:wght=300;500;700&display=swap');
+
+        :root {
+            --bg-dark: #120f0a;
+            --parchment-base: #f2e6d0;
+            --parchment-light: #fdf6e7;
+            --ink-dark: #2b2214;
+            --ink-muted: #5c4d37;
+            --royal-gold: #8c6f3d;
+            --bright-gold: #c9a054;
+            --crimson-velvet: #721c24;
+            --crimson-border: #9c2833;
+        }
+
+        * {
+            box-sizing: border-box;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="%235c4d37" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3c-3 0-6 1.5-8 4-1 1.2-1.5 2.8-1.5 4.5 0 2.2-1.8 4-4 4H3v2h4.5c1.4 0 2.7-.6 3.7-1.5l7.3-7.3C20.5 7.5 21 5.3 21 3z"/><path d="M14 8.5h3M13 11h4"/></svg>'), auto;
+        }
+
+        button, a, .audio-player, .tab-btn, .gate-btn, .map-card-container {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="%238c6f3d" stroke="%232b2214" stroke-width="1"><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg>'), pointer !important;
+        }
+
+        body {
+            font-family: 'Noto Serif KR', serif;
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% 30%, #262015 0%, #120f0a 80%);
+            color: var(--ink-dark);
+            margin: 0;
+            padding: 50px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* 🚪 게이트 스크린 */
+        #gateScreen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% 50%, #1c1710 0%, #0d0b07 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s;
+            padding: 20px;
+        }
+
+        .gate-box {
+            width: 100%; max-width: 550px; background: #1a150e; border: 1px solid var(--royal-gold);
+            padding: 40px 30px; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.8), inset 0 0 30px rgba(140,111,61,0.2);
+            border-radius: 2px;
+        }
+        .gate-title { font-family: 'Cinzel', serif; color: var(--bright-gold); font-size: 1.8rem; letter-spacing: 3px; margin-bottom: 25px; }
+        .gate-text { color: #b5a48b; font-size: 0.95rem; line-height: 1.8; margin-bottom: 35px; }
+        .gate-text strong { color: #e56b6b; }
+        .gate-btn {
+            background: transparent; color: var(--bright-gold); border: 1px solid var(--royal-gold);
+            padding: 14px 40px; font-family: 'Noto Serif KR', serif; font-size: 1rem;
+            font-weight: 700; letter-spacing: 2px; transition: all 0.4s ease;
+            background-image: linear-gradient(rgba(140,111,61,0.05), rgba(140,111,61,0.1));
+        }
+        .gate-btn:hover { background-color: var(--royal-gold); color: var(--bg-dark); box-shadow: 0 0 15px rgba(201, 160, 84, 0.4); transform: translateY(-1px); }
+
+        /* 📜 양피지 프레임 */
+        .parchment-container {
+            width: 100%; max-width: 850px; background-color: var(--parchment-base);
+            background-image: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4) 0%, transparent 100%), linear-gradient(135deg, rgba(234,213,178,0.3) 0%, rgba(181,154,111,0.3) 100%);
+            border-radius: 4px; padding: 50px; box-shadow: 0 0 0 8px #1c1710, 0 20px 50px rgba(0, 0, 0, 0.9), inset 0 0 60px rgba(140, 111, 61, 0.35);
+            border: 2px solid var(--royal-gold); position: relative; overflow: hidden;
+            opacity: 0; transform: translateY(20px); transition: opacity 1s ease 0.3s, transform 1s ease 0.3s;
+        }
+        body.entered .parchment-container { opacity: 1; transform: translateY(0); }
+        .parchment-container::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; box-shadow: inset 0 0 100px rgba(43, 34, 20, 0.6); pointer-events: none; z-index: 1; }
+
+        /* 🎵 오디오 */
+        .audio-wrapper { position: absolute; top: 30px; right: 40px; z-index: 5; }
+        .audio-player {
+            background: rgba(43, 34, 20, 0.06); border: 1px solid rgba(140, 111, 61, 0.4); padding: 6px 14px; border-radius: 2px;
+            display: flex; align-items: center; gap: 10px; font-size: 0.75rem; color: var(--ink-muted); font-family: 'Cinzel', serif; letter-spacing: 1px;
+        }
+        .play-btn { background: none; border: none; color: var(--royal-gold); font-size: 1rem; padding: 0; }
+        .music-waves { display: flex; align-items: flex-end; gap: 3px; width: 18px; height: 12px; }
+        .wave-bar { width: 2px; height: 2px; background-color: var(--royal-gold); border-radius: 1px; transition: all 0.3s ease; }
+        .playing .wave-bar { animation: bounce 0.8s ease-in-out infinite alternate; }
+        .playing .wave-bar:nth-child(2) { animation-delay: 0.15s; }
+        .playing .wave-bar:nth-child(3) { animation-delay: 0.3s; }
+        .playing .wave-bar:nth-child(4) { animation-delay: 0.45s; }
+        @keyframes bounce { 100% { height: 12px; } }
+
+        .header { text-align: center; margin-bottom: 40px; position: relative; z-index: 2; }
+        .header h1 { font-family: 'Cinzel', serif; margin: 0; font-size: 2.6rem; color: var(--ink-dark); letter-spacing: 4px; font-weight: 700; }
+        .header p { margin: 12px 0 0; color: var(--ink-muted); font-size: 1.05rem; letter-spacing: 1px; }
+
+        .warning-banner { background-color: rgba(114, 28, 36, 0.05); border: 1px dashed var(--crimson-border); padding: 20px; margin: 0 0 35px 0; font-size: 0.95rem; line-height: 1.8; }
+        .warning-banner strong.main-title { color: var(--crimson-velvet); font-size: 1.05rem; display: inline-block; margin-bottom: 6px; }
+
+        /* 탭 시스템 */
+        .tabs { display: flex; border-top: 1px solid var(--royal-gold); border-bottom: 1px solid var(--royal-gold); margin-bottom: 35px; }
+        .tab-btn {
+            flex: 1; padding: 16px 10px; background: none; border: none; color: var(--ink-muted);
+            font-family: 'Noto Serif KR', serif; font-size: 1.05rem; font-weight: 500; transition: all 0.3s ease; text-align: center;
+        }
+        .tab-btn:hover { color: var(--ink-dark); background: rgba(43, 34, 20, 0.04); }
+        .tab-btn.active { color: var(--royal-gold); font-weight: 700; background: rgba(255, 255, 255, 0.25); }
+
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+
+        h2 { font-family: 'Noto Serif KR', serif; color: var(--ink-dark); border-bottom: 2px solid var(--royal-gold); padding-bottom: 10px; margin-bottom: 25px; font-size: 1.45rem; }
+
+        /* 🗺️ 그리드 및 배치 */
+        .map-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            width: 100%;
+        }
+
+        .map-item.center {
+            grid-column: 1 / -1;
+            background: rgba(140, 111, 61, 0.06);
+            border: 1px solid var(--royal-gold);
+            padding: 20px;
+            border-radius: 2px;
+        }
+        .map-img { width: 100%; height: 140px; object-fit: cover; border: 1px solid var(--royal-gold); margin-bottom: 12px; filter: sepia(15%); }
+
+        /* 카드 크기 고정 및 내부 스크롤 허용으로 텍스트 잘림 현상 방지 */
+        .map-card-container {
+            perspective: 1500px;
+            width: 100%;
+            aspect-ratio: 3 / 4;
+        }
+
+        .map-card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            border-radius: 3px;
+        }
+
+        .map-card-container.flipped .map-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .view-front, .view-back {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            backface-visibility: hidden;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .view-front {
+            background: #2b2214;
+            border: 2px solid var(--bright-gold);
+        }
+
+        .daegong-full-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: sepia(15%) brightness(90%);
+            display: block;
+        }
+
+        .duke-overlay-bar {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%;
+            background: linear-gradient(to top, rgba(18, 15, 10, 0.95) 70%, rgba(18, 15, 10, 0) 100%);
+            padding: 20px 15px 15px 15px;
+            text-align: center;
+            color: #fff;
+        }
+
+        .duke-title {
+            font-size: 1.2rem; font-weight: 700; color: var(--bright-gold);
+            letter-spacing: 1px; margin-bottom: 4px; display: block;
+        }
+        .duke-subtitle { font-size: 0.8rem; color: #b5a48b; letter-spacing: 0.5px; }
+        .duke-hint { font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 5px; font-style: italic; display: block; }
+
+        /* 뒷면 상세 텍스트가 카드 밖으로 넘치면 스크롤이 생기도록 보완 */
+        .view-back {
+            transform: rotateY(180deg);
+            background-color: #fcf8ee;
+            border: 2px solid var(--royal-gold);
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0 0 30px rgba(140, 111, 61, 0.15);
+            overflow-y: auto; 
+        }
+
+        .view-back h3 {
+            margin-top: 0; font-size: 1.05rem; color: var(--ink-dark);
+            border-bottom: 1px dashed rgba(43, 34, 20, 0.2);
+            padding-bottom: 8px; margin-bottom: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-shrink: 0;
+        }
+        .view-back p { margin: 0; font-size: 0.92rem; color: var(--ink-dark); line-height: 1.6; }
+        
+        .back-return-btn { 
+            display: inline-block; margin-top: 15px; font-size: 0.82rem; font-weight: 700;
+            color: var(--royal-gold); background: none; border: none; padding: 5px 0;
+            text-decoration: underline; text-align: left; width: max-content;
+            flex-shrink: 0;
+        }
+
+        .danger-badge { font-size: 0.75rem; font-weight: 700; }
+        .lvl-safe { color: #1e6b4b; }
+        .lvl-mid { color: #b26a06; }
+        .lvl-hard { color: var(--crimson-velvet); }
+
+        .timeline-item { margin-bottom: 25px; border-bottom: 1px dashed rgba(140, 111, 61, 0.3); padding-bottom: 20px; }
+        .timeline-day { font-size: 1.15rem; font-weight: 700; color: var(--royal-gold); margin-bottom: 10px; }
+        .timeline-desc { font-size: 0.95rem; line-height: 1.7; padding-left: 10px; }
+
+        /* 👑 황실 위계 테이블 데스크톱 기본 스타일 */
+        .table-responsive { width: 100%; border: 1px solid var(--royal-gold); margin-top: 15px; }
+        .rank-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        .rank-table th, .rank-table td { border: 1px solid var(--royal-gold); padding: 14px; text-align: left; line-height: 1.6; }
+        .rank-table th { background: rgba(140, 111, 61, 0.12); font-weight: 700; }
+        .rank-table tr:nth-child(even) { background: rgba(255, 255, 255, 0.15); }
+
+        .apply-box { text-align: center; padding: 20px 0; }
+        .apply-text { font-size: 1.05rem; line-height: 1.8; margin-bottom: 35px; }
+        .submit-btn {
+            display: inline-block; background-color: var(--ink-dark); color: var(--parchment-base);
+            padding: 16px 45px; font-size: 1.15rem; font-weight: 700; text-decoration: none;
+            letter-spacing: 1.5px; border: 1px solid var(--royal-gold); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+        .submit-btn:hover { background-color: var(--royal-gold); color: var(--parchment-light); transform: translateY(-2px); }
+        .notice-sub { display: block; margin-top: 15px; color: var(--crimson-velvet); font-size: 0.85rem; }
+
+        /* 📱 모바일 반응형 완전 최적화 */
+        @media (max-width: 650px) {
+            body { padding: 15px 10px; }
+            .parchment-container { padding: 25px 15px; }
+            .audio-wrapper { position: static; display: flex; justify-content: center; margin-bottom: 25px; }
+            .audio-player { width: 100%; max-width: 300px; justify-content: center; }
+            .header h1 { font-size: 1.6rem; letter-spacing: 2px; }
+            .header p { font-size: 0.9rem; }
+            .tabs { flex-wrap: wrap; }
+            .tab-btn { flex: 1 1 45%; padding: 12px 5px; font-size: 0.85rem; border: 1px solid rgba(140, 111, 61, 0.15) !important; }
+            
+            .map-grid { grid-template-columns: 1fr; gap: 25px; }
+            
+            /* 모바일 영지 카드 안 글씨 크기 조정 */
+            .view-back { padding: 16px; }
+            .view-back h3 { font-size: 0.95rem; margin-bottom: 10px; }
+            .view-back p { font-size: 0.85rem; line-height: 1.5; }
+            .duke-title { font-size: 1rem; }
+            .duke-subtitle { font-size: 0.75rem; }
+
+            /* 👑 황실 위계 모바일 리스트형으로 구조 파괴 후 재구성 */
+            .table-responsive { border: none; }
+            .rank-table, .rank-table thead, .rank-table tbody, .rank-table th, .rank-table td, .rank-table tr { 
+                display: block; 
+                width: 100%;
+            }
+            .rank-table thead { display: none; } /* 모바일에서 표 헤더 숨김 */
+            .rank-table tr {
+                background: rgba(140, 111, 61, 0.05);
+                border: 1px solid var(--royal-gold);
+                margin-bottom: 15px;
+                padding: 12px;
+                border-radius: 4px;
+            }
+            .rank-table tr:nth-child(even) { background: rgba(140, 111, 61, 0.08); }
+            .rank-table td {
+                border: none;
+                padding: 4px 0;
+                font-size: 0.9rem;
+            }
+            .rank-table td:first-child {
+                font-size: 1.05rem;
+                color: var(--royal-gold);
+                border-bottom: 1px dashed rgba(140, 111, 61, 0.3);
+                padding-bottom: 6px;
+                margin-bottom: 8px;
+            }
+            
+            .submit-btn { padding: 14px 25px; font-size: 1rem; width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="gateScreen">
+    <div class="gate-box">
+        <div class="gate-title">THE ACRON CHRONICLES</div>
+        <div class="gate-text">
+            이곳은 능력자들의 엄격한 군사 통제 구역이자,<br>
+            피비린내 나는 마수 토벌과 가혹한 가이딩 연대기가 흐르는 땅입니다.<br><br>
+            본 아크론 대륙 영토 법도에 따라<br>
+            <strong>법령을 준수하며, 모든 운명을 감당할 것을 맹세하겠습니까?</strong>
+        </div>
+        <button class="gate-btn" onclick="enterContinent()">서약 후 입장하기</button>
+    </div>
+</div>
+
+<div class="parchment-container">
+    <div class="audio-wrapper">
+        <div class="audio-player" id="audioPlayerContainer">
+            <button class="play-btn" id="playBtn" onclick="toggleAudio()">▶</button>
+            <span id="audioTrackName">BGM: ACRON THEME</span>
+            <div class="music-waves" id="musicWaves">
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+            </div>
+        </div>
+        <audio id="bgm" src="music/bgm.mp3" loop></audio>
+    </div>
+
+    <div class="header">
+        <h1>THE ACRON CHRONICLES</h1>
+        <p>신들의 영원한 정원, 능력자들의 약속된 영토 ‘아크론 대륙’</p>
+    </div>
+
+    <div class="warning-banner">
+        <strong class="main-title">📜 황실 절대 금령 (必讀)</strong><br>
+        • <strong>성인 전용 제한령:</strong> 본 아크론 영토는 성인 전용 계책 시스템으로 운영되며 엄격한 검증을 통과해야 합니다.<br>
+        • <strong>가이딩 서사 이행:</strong> 대륙의 이치에 따라 캐릭터 간의 긴밀한 신체 접촉 및 농도 높은 가이딩 묘사가 수반되오니 필히 유념하십시오.
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab(event, 'map')">🗺️ 대륙 영지</button>
+        <button class="tab-btn" onclick="openTab(event, 'timeline')">📅 영지 연대기</button>
+        <button class="tab-btn" onclick="openTab(event, 'ranks')">👑 황실 위계</button>
+        <button class="tab-btn" onclick="openTab(event, 'apply')">✍️ 입성 서약</button>
+    </div>
+
+    <!-- 🗺️ 탭 1: 대륙 영지 -->
+    <div id="map" class="tab-content active">
+        <h2>🗺️ 아크론 대륙의 영토 지리</h2>
+        <div class="map-grid">
+            
+            <div class="map-item center">
+                <h3>🏢 중앙 관리 영지 [센트럴 허브] <span class="danger-badge lvl-safe">[ 절대 안전 ]</span></h3>
+                <img src="images/hub.jpg" alt="센트럴 허브 전경" class="map-img" style="height: 160px;">
+                <p>대륙의 위대한 심장부. 국가 소속의 센티넬과 가이드가 상시 집결하며, 황실 직속 가이딩실과 공식 임무 교지가 하달되는 핵심 영역입니다.</p>
+            </div>
+            
+            <!-- 🌿 [동부] -->
+            <div class="map-card-container" id="card-east" onclick="toggleCard('card-east')">
+                <div class="map-card-inner">
+                    <div class="view-front">
+                        <img src="images/east_duke.jpg" alt="세릭 대공" class="daegong-full-img">
+                        <div class="duke-overlay-bar">
+                            <span class="duke-title">👑 세릭 대공 (Guide)</span>
+                            <span class="duke-subtitle">동부 여명의 숲 주권자</span>
+                            <span class="duke-hint">카드를 터치하여 뒷면의 영지 기록 열람</span>
+                        </div>
+                    </div>
+                    <div class="view-back" onclick="event.stopPropagation();">
+                        <h3>🌿 동부 여명의 숲 <span class="danger-badge lvl-safe">[ 위험도 : 하 ]</span></h3>
+                        <img src="images/east.jpg" alt="동부 삼림 전경" class="map-img">
+                        <p>황실의 가장 충성스러운 방패이자 온건파의 수장. 황실 직속 센트럴 허브의 규율을 철저히 준수하며 대륙의 질서를 유지하고자 합니다. 가이드의 인권과 안전을 최우선 명예로 삼아, 대륙 내에서 가이드들이 가장 안심하고 머무를 수 있는 유일한 도피처로 불립니다. 그러나 그 기저에는 숨 막힐 정도로 엄격한 유교적·황실적 규율이 깔려 있습니다.</p>
+                        <button class="back-return-btn" onclick="toggleCard('card-east')">← 초상화 보기</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 🏜️ [서부] -->
+            <div class="map-card-container" id="card-west" onclick="toggleCard('card-west')">
+                <div class="map-card-inner">
+                    <div class="view-front">
+                        <img src="images/shan.jpg" alt="샨 대공" class="daegong-full-img">
+                        <div class="duke-overlay-bar">
+                            <span class="duke-title">👑 샨 대공 (Sentinel)</span>
+                            <span class="duke-subtitle">서부 황혼의 협곡 영주</span>
+                            <span class="duke-hint">카드를 터치하여 뒷면의 영지 기록 열람</span>
+                        </div>
+                    </div>
+                    <div class="view-back" onclick="event.stopPropagation();">
+                        <h3>🏜️ 서부 황혼의 협곡 <span class="danger-badge lvl-mid">[ 위험도 : 중 ]</span></h3>
+                        <img src="images/west.jpg" alt="서부 캐년 전경" class="map-img">
+                        <p>겉으로는 황제의 교지를 따르는 척하지만, 뒤로는 서부 고유의 독자적인 규칙을 고수합니다. 신분, 과거, 혈통은 이곳에서 아무런 의미를 갖지 못하며 오직 '실전 전투력'과 '가이딩 효율'만으로 모든 위계가 결정됩니다. 중앙 허브의 감시 체계가 닿지 않는 협곡 깊은 곳에서 밀수된 정화 앰플과 비공식적인 가이딩 계약이 판치는, 위험하면서도 치명적인 해방구입니다.</p>
+                        <button class="back-return-btn" onclick="toggleCard('card-west')">← 초상화 보기</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 🏛️ [남부] -->
+            <div class="map-card-container" id="card-south" onclick="toggleCard('card-south')">
+                <div class="map-card-inner">
+                    <div class="view-front">
+                        <img src="images/south_duke.jpg" alt="카엘 대공" class="daegong-full-img">
+                        <div class="duke-overlay-bar">
+                            <span class="duke-title">👑 카엘 대공 (Guide)</span>
+                            <span class="duke-subtitle">남부 방치된 폐허 감시자</span>
+                            <span class="duke-hint">카드를 터치하여 뒷면의 영지 기록 열람</span>
+                        </div>
+                    </div>
+                    <div class="view-back" onclick="event.stopPropagation();">
+                        <h3>🏛️ 남부 방치된 폐허 <span class="danger-badge lvl-mid">[ 위험도 : 중 ]</span></h3>
+                        <img src="images/south.jpg" alt="남부 유적 전경" class="map-img">
+                        <p>한때 가장 찬란했던 고대 도시는 이제 지하 균열에서 기어 나오는 기괴한 변종 마수들과 부패한 마염으로 가득 찬 사지(死地)가 되었습니다. 이곳의 주둔 기사단은 중앙 허브에서 좌천당하거나 버림받은 능력자들로 구성되어 있으며, 매일 밤 생과 사를 넘나드는 참혹한 토벌을 이어갑니다. 구원의 여지조차 보이지 않는 잿빛 폐허 속에서, 생존만을 위해 서로의 본능에 의지하는 처절하고 피비린내 나는 서사가 흐르는 곳입니다.</p>
+                        <button class="back-return-btn" onclick="toggleCard('card-south')">← 초상화 보기</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ❄️ [북부] -->
+            <div class="map-card-container" id="card-north" onclick="toggleCard('card-north')">
+                <div class="map-card-inner">
+                    <div class="view-front">
+                        <img src="images/argent.jpg" alt="아르젠 대공" class="daegong-full-img">
+                        <div class="duke-overlay-bar">
+                            <span class="duke-title">👑 아르젠 대공 (Sentinel)</span>
+                            <span class="duke-subtitle">북부 심연의 동토 지배자</span>
+                            <span class="duke-hint">카드를 터치하여 뒷면의 영지 기록 열람</span>
+                        </div>
+                    </div>
+                    <div class="view-back" onclick="event.stopPropagation();">
+                        <h3>❄️ 북부 심연의 동토 <span class="danger-badge lvl-hard">[ 위험도 : 최상 ]</span></h3>
+                        <img src="images/north.jpg" alt="북부 빙벽 전경" class="map-img">
+                        <p>영구 동토의 혹한만큼이나 차갑고 잔혹한 이성을 지닌 냉혈한들의 영역입니다. 아르젠 가문은 가이드를 인격체가 아닌, 센티넬의 폭주를 막기 위한 '가장 완벽하고 정밀한 정화 도구(부속품)'로만 취급합니다. 매치율이 단 1%라도 떨어지거나 가이딩 능력이 감소한 자는 가차 없이 전선에서 배제되는 극단의 효율주의를 자랑하지만, 주말마다 벌어지는 최악의 대토벌전을 압도적인 무력으로 찍어 누르는 대륙 최고의 전장입니다.</p>
+                        <button class="back-return-btn" onclick="toggleCard('card-north')">← 초상화 보기</button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- 📅 탭 2: 연대기 -->
+    <div id="timeline" class="tab-content">
+        <h2>📅 주간 시스템 및 서사 루틴</h2>
+        <div class="timeline-item">
+            <div class="timeline-day">📅 월요일 ~ 목요일 | 일상 및 돌발 징후 조우</div>
+            <div class="timeline-desc">
+                <p><strong>💞 매칭 데이 (목요일):</strong> 황제(관리자)의 직속 권한 하에 센티넬과 가이드를 1:1 랜덤 매칭을 진행합니다.</p>
+                <p><strong>🚨 돌발 경보 (랜덤):</strong> 평일 정원 폭주 징후나 황실 정기 검진 등 유기적 돌발 이벤트가 발생합니다.</p>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-day">📅 금요일 | 토벌전 전야 작전 통제</div>
+            <div class="timeline-desc">
+                <p><strong>⚔️ 사전 정비 기간:</strong> 가혹한 주말 레이드를 대비해 지정된 파트너와 밀도 높은 결속 가이딩을 진행합니다.</p>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-day">📅 토요일 ~ 일요일 | [메인 콘텐츠] 북부 대토벌 작전</div>
+            <div class="timeline-desc">
+                <p><strong>🌋 혹한의 전장 출정:</strong> 사령관의 지휘 통제에 따라 최악의 빙벽인 [심연의 동토] 마수 무리를 전면 처단합니다.</p>
+                <p><strong>💋 현장 실시간 즉석 가이딩:</strong> 전장 한복판 고갈 상태에 빠진 센티넬을 구원하기 위해 즉석 가이딩 서사가 허용됩니다.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 👑 탭 3: 작위 위계 -->
+    <div id="ranks" class="tab-content">
+        <h2>👑 현대 로맨스 판타지 작위 체계</h2>
+        <div class="table-responsive">
+            <table class="rank-table">
+                <thead>
+                    <tr>
+                        <th>황실 신분 작위</th>
+                        <th>상세 설명 및 능력 등급 기준</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>👑 황제 (Emperor)</strong></td><td>대륙의 최고 정점이자 주권자. <strong>(총괄 마스터 전용 신분)</strong></td></tr>
+                    <tr><td><strong>🏰 공작 (Duke)</strong></td><td>황실 최상위 권력 위임자. <strong>S급 이상</strong> 센티넬/가이드 각각 1명 (총 2명)</td></tr>
+                    <tr><td><strong>⚔️ 후작 / 백작</strong></td><td>대토벌 작전 시 각 전선 사령관 직을 수행하는 A~B급 이상 능력자. 각각 1명 (총 4명)</td></tr>
+                    <tr><td><strong>🛡️ 자작 / 남작</strong></td><td>허브 정규 실무 및 치료 지원을 책임지는 일반 C~D등급 능력자. 각각 1명 (총 4명)</td></tr>
+                    <tr><td><strong>📜 기사 / 평민</strong></td><td>여명의 숲에 최초 배치되어 조율을 시작하는 신참 센티넬/가이드. (인원 제한 없음)</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ✍️ 탭 4: 입성 서약 -->
+    <div id="apply" class="tab-content">
+        <h2>✍️ 아크론 대륙 입성 서약서 제출</h2>
+        <div class="apply-box">
+            <p class="apply-text">
+                오래된 양피지 서약서 위에 당신의 영혼의 인장을 새기십시오.<br>
+                황실의 법도와 피비린내 나는 가이딩 연대기를 감당할 자들의 입성을 허가합니다.
+            </p>
+            <div class="submit-container">
+                <a href="https://naver.me/5T0TKV5y" target="_blank" class="submit-btn">📜 서약서 작성 및 입성하기</a>
+            </div>
+            <span class="notice-sub">※ 본 서약 완료 시 성인 인증 확인 절차가 엄격하게 집행됩니다.</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => { document.getElementById("bgm").load(); });
+
+    function enterContinent() {
+        const gate = document.getElementById("gateScreen");
+        const audio = document.getElementById("bgm");
+        const playBtn = document.getElementById("playBtn");
+        const container = document.getElementById("audioPlayerContainer");
+        
+        gate.style.opacity = "0";
+        setTimeout(() => { gate.style.visibility = "hidden"; }, 800);
+        document.body.classList.add("entered");
+
+        audio.play().then(() => {
+            playBtn.innerText = "■";
+            container.classList.add("playing");
+        }).catch(err => console.log(err));
+    }
+
+    function openTab(evt, tabName) {
+        const tabContents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < tabContents.length; i++) { tabContents[i].classList.remove("active"); }
+        const tabButtons = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < tabButtons.length; i++) { tabButtons[i].classList.remove("active"); }
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
+    }
+
+    function toggleCard(cardId) {
+        const cardContainer = document.getElementById(cardId);
+        cardContainer.classList.toggle("flipped");
+    }
+
+    function toggleAudio() {
+        const audio = document.getElementById("bgm");
+        const playBtn = document.getElementById("playBtn");
+        const container = document.getElementById("audioPlayerContainer");
+
+        if (audio.paused) {
+            audio.play().then(() => {
+                playBtn.innerText = "■";
+                container.classList.add("playing");
+            });
+        } else {
+            audio.pause();
+            playBtn.innerText = "▶";
+            container.classList.remove("playing");
+        }
+    }
+</script>
+</body>
+</html>
