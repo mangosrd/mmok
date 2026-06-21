@@ -136,7 +136,6 @@
         }
         .map-img { width: 100%; height: 140px; object-fit: cover; border: 1px solid var(--royal-gold); margin-bottom: 12px; filter: sepia(15%); }
 
-        /* 카드 크기 고정 및 내부 스크롤 허용으로 텍스트 잘림 현상 방지 */
         .map-card-container {
             perspective: 1500px;
             width: 100%;
@@ -194,7 +193,6 @@
         .duke-subtitle { font-size: 0.8rem; color: #b5a48b; letter-spacing: 0.5px; }
         .duke-hint { font-size: 0.7rem; color: rgba(255,255,255,0.4); margin-top: 5px; font-style: italic; display: block; }
 
-        /* 뒷면 상세 텍스트가 카드 밖으로 넘치면 스크롤이 생기도록 보완 */
         .view-back {
             transform: rotateY(180deg);
             background-color: #fcf8ee;
@@ -215,7 +213,6 @@
         }
         .view-back p { margin: 0; font-size: 0.92rem; color: var(--ink-dark); line-height: 1.6; }
         
-        /* ✨ 새로 추가된 대공 능력 텍스트 스타일 */
         .duke-ability-box {
             margin-top: 12px;
             padding: 10px;
@@ -252,7 +249,7 @@
         .rank-table th { background: rgba(140, 111, 61, 0.12); font-weight: 700; }
         .rank-table tr:nth-child(even) { background: rgba(255, 255, 255, 0.15); }
 
-        /* 📜 유의사항 스타일 추가 */
+        /* 📜 유의사항 스타일 */
         .notice-card {
             background: rgba(140, 111, 61, 0.04);
             border: 1px solid rgba(140, 111, 61, 0.3);
@@ -282,8 +279,63 @@
             font-weight: bold;
         }
 
+        /* 📢 능력 조율 요청 카드 전용 스타일 */
+        .coordination-card {
+            background-color: rgba(114, 28, 36, 0.03);
+            border: 1px solid var(--crimson-border);
+            border-radius: 3px;
+            padding: 22px;
+            margin-bottom: 30px;
+            text-align: left;
+            font-size: 0.92rem;
+            line-height: 1.7;
+        }
+        .coordination-card h4 {
+            margin: 0 0 12px 0;
+            font-size: 1.1rem;
+            color: var(--crimson-velvet);
+            font-weight: 700;
+            border-bottom: 1px dashed rgba(156, 40, 51, 0.3);
+            padding-bottom: 6px;
+        }
+        .coordination-sub {
+            color: var(--ink-muted);
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        .coordination-section {
+            margin-bottom: 15px;
+        }
+        .coordination-section:last-of-type {
+            margin-bottom: 18px;
+        }
+        .coordination-title {
+            font-weight: 700;
+            color: var(--ink-dark);
+            margin-bottom: 4px;
+        }
+        .coordination-card ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+        .coordination-card li {
+            margin-bottom: 4px;
+            color: var(--ink-dark);
+        }
+        .coordination-card li strong {
+            color: var(--crimson-velvet);
+        }
+        .coordination-important-box {
+            background-color: rgba(140, 111, 61, 0.06);
+            border-left: 3px solid var(--royal-gold);
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            color: var(--ink-dark);
+            margin-top: 5px;
+        }
+
         .apply-box { text-align: center; padding: 20px 0; }
-        .apply-text { font-size: 1.05rem; line-height: 1.8; margin-bottom: 35px; }
+        .apply-text { font-size: 1.05rem; line-height: 1.8; margin-bottom: 25px; }
         .submit-btn {
             display: inline-block; background-color: var(--ink-dark); color: var(--parchment-base);
             padding: 16px 45px; font-size: 1.15rem; font-weight: 700; text-decoration: none;
@@ -293,7 +345,7 @@
         .submit-btn:hover { background-color: var(--royal-gold); color: var(--parchment-light); transform: translateY(-2px); }
         .notice-sub { display: block; margin-top: 15px; color: var(--crimson-velvet); font-size: 0.85rem; }
 
-        /* 📱 모바일 반응형 완전 최적화 */
+        /* 📱 모바일 반응형 최적화 */
         @media (max-width: 650px) {
             body { padding: 15px 10px; }
             .parchment-container { padding: 25px 15px; }
@@ -306,7 +358,6 @@
             
             .map-grid { grid-template-columns: 1fr; gap: 25px; }
             
-            /* 모바일 영지 카드 안 글씨 크기 조정 */
             .view-back { padding: 16px; }
             .view-back h3 { font-size: 0.95rem; margin-bottom: 10px; }
             .view-back p { font-size: 0.85rem; line-height: 1.5; }
@@ -314,13 +365,12 @@
             .duke-subtitle { font-size: 0.75rem; }
             .duke-ability-box { font-size: 0.8rem; padding: 8px; }
 
-            /* 👑 황실 위계 모바일 리스트형으로 구조 파괴 후 재구성 */
             .table-responsive { border: none; }
             .rank-table, .rank-table thead, .rank-table tbody, .rank-table th, .rank-table td, .rank-table tr { 
                 display: block; 
                 width: 100%;
             }
-            .rank-table thead { display: none; } /* 모바일에서 표 헤더 숨김 */
+            .rank-table thead { display: none; }
             .rank-table tr {
                 background: rgba(140, 111, 61, 0.05);
                 border: 1px solid var(--royal-gold);
@@ -341,6 +391,9 @@
                 padding-bottom: 6px;
                 margin-bottom: 8px;
             }
+            
+            .coordination-card { padding: 16px; }
+            .coordination-card h4 { font-size: 1rem; }
             
             .submit-btn { padding: 14px 25px; font-size: 1rem; width: 100%; text-align: center; }
         }
@@ -394,7 +447,6 @@
         <button class="tab-btn" onclick="openTab(event, 'apply')">✍️ 입성 서약</button>
     </div>
 
-    <!-- 🗺️ 탭 1: 대륙 영지 -->
     <div id="map" class="tab-content active">
         <h2>🗺️ 아크론 대륙의 영토 지리</h2>
         <div class="map-grid">
@@ -405,7 +457,6 @@
                 <p>대륙의 위대한 심장부. 국가 소속의 센티넬과 가이드가 상시 집결하며, 황실 직속 가이딩실과 공식 임무 교지가 하달되는 핵심 영역입니다.</p>
             </div>
             
-            <!-- 🌿 [동부] -->
             <div class="map-card-container" id="card-east" onclick="toggleCard('card-east')">
                 <div class="map-card-inner">
                     <div class="view-front">
@@ -428,7 +479,6 @@
                 </div>
             </div>
             
-            <!-- 🏜️ [서부] -->
             <div class="map-card-container" id="card-west" onclick="toggleCard('card-west')">
                 <div class="map-card-inner">
                     <div class="view-front">
@@ -444,14 +494,13 @@
                         <img src="images/west.jpg" alt="서부 캐년 전경" class="map-img">
                         <p>서부의 밤은 자비가 없습니다. 해가 떨어지면 숨통을 조이는 한기가 흑요석 협곡을 타고 내려오고, 거친 센티널들의 피가 끓어오르지만, 영지 전체에 짙은 색의 광석(흑요석 등)이 깔려 있어, 밤이 되면 지면에 별빛이 반사되어 마치 땅 위에도 은하수가 흐르는 듯한 착각을 불러일으키는 지역입니다.</p>
                         <div class="duke-ability-box">
-                            <strong>주요 능력:</strong> 능력을 개방하면 영역 안에 있는 모든 센티넬들의 시각적인 안정감과 예민한 감각을 낮춘다. 
+                            <strong>주요 능력:</strong> 능력을 개방하면 영역 안에 있는 모든 센티넬들의 시각적인 안정감และ 예민한 감각을 낮춘다. 
                         </div>
                         <button class="back-return-btn" onclick="toggleCard('card-west')">← 초상화 보기</button>
                     </div>
                 </div>
             </div>
             
-            <!-- 🏛️ [남부] -->
             <div class="map-card-container" id="card-south" onclick="toggleCard('card-south')">
                 <div class="map-card-inner">
                     <div class="view-front">
@@ -474,7 +523,6 @@
                 </div>
             </div>
             
-            <!-- ❄️ [북부] -->
             <div class="map-card-container" id="card-north" onclick="toggleCard('card-north')">
                 <div class="map-card-inner">
                     <div class="view-front">
@@ -500,7 +548,6 @@
         </div>
     </div>
 
-    <!-- 📅 탭 2: 연대기 -->
     <div id="timeline" class="tab-content">
         <h2>📅 주간 시스템 및 서사 루틴</h2>
         <div class="timeline-item">
@@ -525,7 +572,6 @@
         </div>
     </div>
 
-    <!-- 👑 탭 3: 작위 위계 -->
     <div id="ranks" class="tab-content">
         <h2>👑 현대 로맨스 판타지 작위 체계</h2>
         <div class="table-responsive">
@@ -546,7 +592,6 @@
             </table>
         </div>
 
-        <!-- ✨ 새로 추가된 유의사항 세션 -->
         <h3 class="section-subtitle">📜 세계관 운영 및 위계 유의사항</h3>
         
         <div class="notice-card">
@@ -578,7 +623,6 @@
         </div>
     </div>
 
-    <!-- ✍️ 탭 4: 입성 서약 -->
     <div id="apply" class="tab-content">
         <h2>✍️ 아크론 대륙 입성 서약서 제출</h2>
         <div class="apply-box">
@@ -586,6 +630,32 @@
                 오래된 양피지 서약서 위에 당신의 영혼의 인장을 새기십시오.<br>
                 황실의 법도와 피비린내 나는 가이딩 연대기를 감당할 자들의 입성을 허가합니다.
             </p>
+
+            <div class="coordination-card">
+                <h4>📜 능력 조율 및 프로필 수정 요청</h4>
+                <div class="coordination-sub">원활한 서사 진행과 세계관 밸런스를 위해 가이드 및 센티넬 신청자분들께 능력 조율 요청을 드립니다. 아래 내용을 반드시 확인하신 후, 신청을 부탁드립니다.</div>
+                
+                <div class="coordination-section">
+                    <div class="coordination-title">1. 가이드 능력 범위 조정</div>
+                    <ul>
+                        <li>가이드 능력이 <strong>'보호와 치유'</strong>인 경우, 광역으로 모든 캐릭터(센티넬/가이드)를 보호하는 능력은 타 캐릭터의 서사 진행에 갈등 요소를 저해할 우려가 있습니다.</li>
+                        <li>모든 인원을 동시 보호하는 형태가 아닌, <strong>대상이나 범위에 명확한 제한(페널티)</strong>이 생기도록 능력을 조정해 주시기 바랍니다.</li>
+                    </ul>
+                </div>
+
+                <div class="coordination-section">
+                    <div class="coordination-title">2. 센티넬 '즉사' 능력 수정 및 주의사항</div>
+                    <ul>
+                        <li>능력에 <strong>'즉사'</strong> 관련 설정이 포함되어 있다면 수정을 부탁드립니다.</li>
+                        <li>본 세계관에서는 서사 진행 중 캐릭터의 사망이 허용될 수 있으나, 러닝 중 예기치 못한 갑작스러운 죽음은 전체적인 세계관 운영과 서사 흐름에 큰 차질을 줄 수 있습니다. 신중한 설정 부탁드립니다.</li>
+                    </ul>
+                </div>
+
+                <div class="coordination-important-box">
+                    📢 <strong>필수 유의사항:</strong> 프로필 사진을 지급 받은 능력자들은 자신의 답글 아래에 능력과 패널티에 대한 내용을 상세하게 작성해주시기 바랍니다.
+                </div>
+            </div>
+
             <div class="submit-container">
                 <a href="https://naver.me/5T0TKV5y" target="_blank" class="submit-btn">📜 서약서 작성 및 입성하기</a>
             </div>
